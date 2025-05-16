@@ -25,6 +25,10 @@ $end_info$
 #include <linux/seccomp.h>
 #include <sys/prctl.h>
 
+#ifndef F_SEAL_FUTURE_WRITE
+#define F_SEAL_FUTURE_WRITE  0x0010  /* prevent future writes while mapped */
+#endif
+
 // seccomp
 //
 // global
@@ -423,7 +427,7 @@ SeccompEmulator::ExecuteFilter(FEXCore::Core::CpuStateFrame* Frame, uint64_t JIT
     uint64_t Mask = 1 << (SIGSYS - 1);
     SignalDelegation->GuestSigProcMask(Thread, SIG_UNBLOCK, &Mask, nullptr);
     SignalDelegation->UninstallHostHandler(SIGSYS);
-    tgkill(::getpid(), ::gettid(), SIGSYS);
+    ::syscall(SYS_tgkill, ::getpid(), ::syscall(SYS_gettid), SIGSYS);
     break;
   }
   case SECCOMP_RET_TRAP: {
@@ -437,7 +441,7 @@ SeccompEmulator::ExecuteFilter(FEXCore::Core::CpuStateFrame* Frame, uint64_t JIT
     Info.si_syscall = Args->Argument[0];
     Info.si_arch = Arch;
 
-    SignalDelegation->QueueSignal(::getpid(), ::gettid(), SIGSYS, &Info, true);
+    SignalDelegation->QueueSignal(::getpid(), ::syscall(SYS_gettid), SIGSYS, &Info, true);
     break;
   }
   case SECCOMP_RET_ERRNO: {

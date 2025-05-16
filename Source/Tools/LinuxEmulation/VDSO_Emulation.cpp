@@ -304,7 +304,7 @@ namespace x32 {
         int rv;
       }* args = reinterpret_cast<ArgsRV_t*>(ArgsRV);
 
-      int Result = ::getcpu(args->cpu, args->node);
+      int Result = ::syscall(SYS_getcpu, args->cpu, args->node, NULL);
       args->rv = SyscallRet(Result);
     }
   } // namespace glibc

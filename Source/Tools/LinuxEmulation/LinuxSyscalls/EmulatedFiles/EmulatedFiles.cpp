@@ -33,6 +33,10 @@ $end_info$
 #include <unistd.h>
 #include <utility>
 
+#ifndef F_SEAL_FUTURE_WRITE
+#define F_SEAL_FUTURE_WRITE  0x0010  /* prevent future writes while mapped */
+#endif
+
 namespace FEX::EmulatedFile {
 /**
  * @brief Generates a temporary file using raw FDs
