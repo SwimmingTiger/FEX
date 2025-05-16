@@ -27,6 +27,7 @@ function(GenerateInterpreter NAME AsInterpreter)
       CommonTools
       ${PTHREAD_LIB}
       fmt::fmt
+      rt
   )
   target_compile_options(${NAME} PRIVATE ${FEX_TUNE_COMPILE_FLAGS})
   target_compile_definitions(${NAME} PRIVATE -DFEXLOADER_AS_INTERPRETER=${AsInterpreter})

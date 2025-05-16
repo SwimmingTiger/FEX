@@ -1180,7 +1180,7 @@ GdbServer::HandledPacketType GdbServer::CommandMultiLetterV(const fextl::string&
   }
 
   if (packet.starts_with("vKill")) {
-    tgkill(::getpid(), ::getpid(), SIGKILL);
+    ::syscall(SYS_tgkill, ::getpid(), ::getpid(), SIGKILL);
   }
 
   // TODO: vRun
